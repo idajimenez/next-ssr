@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import Link from 'next/link'
 import { IPokemon } from '../types/Pokemon'
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
     const resp = await fetch('https://jherr-pokemon.s3.us-west-1.amazonaws.com/index.json');
 
     return {

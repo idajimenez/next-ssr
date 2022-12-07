@@ -7,7 +7,19 @@ import styles from '../../styles/Details.module.css'
 import Link from 'next/link'
 import { IPokemon } from '../../types/Pokemon'
 
-export const getServerSideProps = async ({ params: { id } }: { params: { id: string }}) => {
+export const getStaticPaths = async () => {
+    const resp = await fetch('https://jherr-pokemon.s3.us-west-1.amazonaws.com/index.json');
+    const pokemon = await resp.json();
+
+    return {
+        paths: pokemon.map(({ id }: { id: number }) => ({
+            params: { id: `${id}` }
+        })),
+        fallback: false
+    }
+}
+
+export const getStaticProps = async ({ params: { id } }: { params: { id: string }}) => {
     const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`);
 
     return {
