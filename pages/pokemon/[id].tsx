@@ -7,23 +7,17 @@ import styles from '../../styles/Details.module.css'
 import Link from 'next/link'
 import { IPokemon } from '../../types/Pokemon'
 
-export default function Details() {
-    const { query: { id }} = useRouter();
+export const getServerSideProps = async ({ params: { id } }: { params: { id: string }}) => {
+    const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`);
 
-    const [pokemon, setPokemon] = useState<IPokemon | null>(null);
-
-    useEffect(() => {
-        const getPokemon = async () => {
-            const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`);
-
-            setPokemon(await resp.json());
+    return {
+        props: {
+            pokemon: await resp.json()
         }
+    }
+}
 
-        getPokemon();
-    }, [id]);
-
-    if (!pokemon) return null;
-
+export default function Details({ pokemon }: { pokemon: IPokemon }) {
     return (
         <div>
             <Head>
